@@ -1,0 +1,15 @@
+const express = require('express')
+const router = express.Router()
+const {getUser,getUsers,addUser, updateUser,delUser,signUpUser,loginUser,changePassword} = require("../controllers/userController")
+
+router.post('/login',loginUser)
+router.post('/signup',signUpUser)
+router.post('/',addUser)
+const requireAuth = require('../middleware/requireAuth')
+router.use(requireAuth)
+router.post("/changePassword/:id",changePassword)
+router.get('/:id',getUser)
+router.get('/',getUsers)
+router.delete('/:id',delUser)
+router.put('/:id',updateUser)
+module.exports = router
