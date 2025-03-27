@@ -1,9 +1,9 @@
-const userModel = require("../models/userModel")
-const { OAuth2Client } = require('google-auth-library');
-const mongoose = require('mongoose')
-const validator = require('validator')
-const jwt = require('jsonwebtoken')
-const bcrypt = require('bcrypt');
+import userModel from "../models/userModel.js";
+import mongoose from "mongoose";
+import validator from "validator";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
 const createToken = (_id) =>{
     return jwt.sign({_id}, process.env.SECRET,{ expiresIn: '3d' })
 }
@@ -30,9 +30,9 @@ const getUser = async (req,res) =>{
 }
 //add users
 const addUser = async (req,res)=>{
-    const {username,email,password} = req.body
+    const {username,password} = req.body
     try{
-        const user = await userModel.create({username,email,password})
+        const user = await userModel.create({username,password})
         res.status(200).json(user)
     }
     catch(error){
@@ -75,9 +75,9 @@ const updateUser = async (req,res) =>{
     res.status(200).json(user)
 }
 const loginUser = async (req,res) =>{
-    const {email,password} = req.body
+    const {password} = req.body
     try {
-        const user = await userModel.login(email,password)
+        const user = await userModel.login(password)
         const token = createToken(user._id)
         res.status(200).json({userId: user._id,token})
     } catch (error) {
@@ -85,9 +85,9 @@ const loginUser = async (req,res) =>{
     }
 }
 const signUpUser = async (req,res) =>{
-    const {username,email,password} = req.body
+    const {username,password} = req.body
     try {
-        const user = await userModel.signup(username,email,password)
+        const user = await userModel.signup(username,password)
         const token = createToken(user._id)
         res.status(200).json({userId: user._id,token})
     } catch (error) {
@@ -133,7 +133,7 @@ const signUpUser = async (req,res) =>{
         }
       };
   
-module.exports = {
+  export {
     getUsers,
     getUser,
     addUser,
@@ -142,4 +142,5 @@ module.exports = {
     loginUser,
     changePassword,
     signUpUser
-}
+  };
+    
