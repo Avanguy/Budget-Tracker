@@ -1,17 +1,16 @@
 
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './client/component/Home';
-import TransactionPage from './client/component/TransactionPage';
 import Header from './client/component/Header';
-const About = () => <h2>About Page</h2>;
 const NotFound = () => <h2>404 - Not Found</h2>;
 import './App.css';
+import Transaction from './client/component/Transaction';
 
 function App() {
   return (
     <>
     <Header />
-      <nav>
+      {/* <nav>
         <div>
           <nav>
             <ul>
@@ -20,10 +19,10 @@ function App() {
             </ul>
           </nav>
         </div>
-      </nav>
+      </nav> */}
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/transactions" element={<TransactionPage />} />
+        <Route path="/transactions" element={<Transaction />} />
         <Route path="*" element={<NotFound />} /> {/* Fallback route */}
       </Routes>      
     </>

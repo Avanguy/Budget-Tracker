@@ -65,44 +65,25 @@ const Header = () => {
         }
     // Here you'd send signUpData to backend for registration
   };
-  const getUsers = async () => {
-    const signUpResponse = await fetch("http://localhost:5174/api/users/")
-    const user = await signUpResponse.json()
-    if(!signUpResponse.ok){
-        console.log(user.error)
-        return
-    }
-    if(signUpResponse.ok){
-        console.log(user)
-        /* const createUserCollectionCheck = createUserCollections(user)
-        if(!createUserCollectionCheck?.isSuccessful){
-            console.log(createUserCollectionCheck?.erroMessage)
-            return
-        }
-        setIsLoading(false)
-        localStorage.setItem('user',JSON.stringify(user))
-        login(user.userId,user.token)
-        navigate("/") */
-        }
-    // Here you'd send signUpData to backend for registration
-}
   return (
-    <header>
-          <h1 className="text-3xl text-center font-bold underline text-fuchsia-400">
+    <header className='flex justify-between items-center p-4 bg-gray-400'>
+          <h1 className="text-3xl font-bold text-white mx-auto">
             Budget Tracker
           </h1>
-          <button
-            className="btn-custom"
-            onClick={getUsers} // Open modal on click
-          >
-            Log in
-          </button>
-          <button
-            className="btn-custom"
-            onClick={handleSignupClick} // Open modal on click
-          >
-            Sign up
-          </button>
+          <div className=''>
+            <button
+                className="btn-custom"
+                onClick={handleLoginClick} // Open modal on click
+            >
+                Log in
+            </button>
+            <button
+                className="btn-custom"
+                onClick={handleSignupClick} // Open modal on click
+            >
+                Sign up
+            </button>
+          </div>
           <dialog ref={loginModalRef} className="modal-dialog">
             <div className="modal-content">
             <h2>Login</h2>
