@@ -1,1 +1,26 @@
 @import "tailwindcss";
+/* Add this to your App.css for modal styling */
+.modal-dialog {
+  max-width: 400px;
+  margin: 20vh auto; /* Centers the modal vertically */
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-content button {
+  margin-top: 10px;
+}
+.btn-custom {
+  @apply text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 hover:cursor-pointer transition-all duration-300;
+}
+
+.btn-custom-close {
+  @apply text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800 hover:cursor-pointer transition-all duration-300;
+}
