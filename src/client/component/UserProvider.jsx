@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 
 // Create Context
-const UserContext = createContext();
+export const UserContext = createContext(); // Export the context
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   // Load user from localStorage on mount
