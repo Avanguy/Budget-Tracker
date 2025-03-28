@@ -75,9 +75,9 @@ const updateUser = async (req,res) =>{
     res.status(200).json(user)
 }
 const loginUser = async (req,res) =>{
-    const {password} = req.body
+    const {username,password} = req.body
     try {
-        const user = await userModel.login(password)
+        const user = await userModel.login(username,password)
         const token = createToken(user._id)
         res.status(200).json({userId: user._id,token})
     } catch (error) {

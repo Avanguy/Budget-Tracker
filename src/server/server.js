@@ -2,14 +2,18 @@ import dotenv from 'dotenv';
 dotenv.config();
 import express from "express";
 import cors from "cors";
-import bodyParser from "body-parser";
 import userRoute from  "./routes/userRoute.js"
 import mongoose from "mongoose";
 const app = express();
 // Middleware 
-app.use(cors());
-app.use(bodyParser.json());
-console.log("")
+const corsOptions = {
+  origin: process.env.CLIENT_URL || "http://localhost:5173", // Replace with your frontend URL in production
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true, // Allows cookies/auth headers
+};
+
+app.use(cors(corsOptions));
+app.use(express.json()); // No need for body-parser
 // Routes 
 app.get('/', (req, res) => {
     res.send('Server is running...');
