@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 
 const testData = [
-    { id: "1", amount: 1500, category: "Salary", type: "income", date: "2024-03-20", description: "March paycheck", recurring: true, recurrenceFrequency: "Monthly" },
-    { id: "2", amount: 200, category: "Groceries", type: "expense", date: "2024-03-22", description: "Supermarket shopping", recurring: false },
-    { id: "3", amount: 50, category: "Transport", type: "expense", date: "2024-03-23", description: "Train ticket", recurring: false },
-    { id: "4", amount: 100, category: "Entertainment", type: "expense", date: "2024-03-25", description: "Concert ticket", recurring: false },
-    { id: "5", amount: 60, category: "Subscription", type: "expense", date: "2024-03-01", description: "Netflix & Spotify", recurring: true, recurrenceFrequency: "Monthly" },
-    { id: "6", amount: 200, category: "Freelance", type: "income", date: "2024-03-15", description: "Freelance project payment", recurring: false },
-    { id: "7", amount: 500, category: "Investment", type: "income", date: "2024-03-10", description: "Stock dividends", recurring: false },
-    { id: "8", amount: 75, category: "Health", type: "expense", date: "2024-03-18", description: "Doctor appointment", recurring: false }
+    { id: "1", amount: 1500, category: "Salary", type: "income", date: "2025-03-20", description: "March paycheck", recurring: true, recurrenceFrequency: "Monthly" },
+    { id: "2", amount: 200, category: "Groceries", type: "expense", date: "2025-03-22", description: "Supermarket shopping", recurring: false },
+    { id: "3", amount: 50, category: "Transport", type: "expense", date: "2025-03-23", description: "Train ticket", recurring: false },
+    { id: "4", amount: 100, category: "Entertainment", type: "expense", date: "2025-03-25", description: "Concert ticket", recurring: false },
+    { id: "5", amount: 60, category: "Subscription", type: "expense", date: "2025-03-01", description: "Netflix & Spotify", recurring: true, recurrenceFrequency: "Monthly" },
+    { id: "6", amount: 200, category: "Freelance", type: "income", date: "2025-03-15", description: "Freelance project payment", recurring: false },
+    { id: "7", amount: 500, category: "Investment", type: "income", date: "2025-03-10", description: "Stock dividends", recurring: false },
+    { id: "8", amount: 75, category: "Health", type: "expense", date: "2025-02-18", description: "Doctor appointment", recurring: false }
 ];
 
 const EditTransaction = () => {
@@ -16,50 +16,31 @@ const EditTransaction = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const transactionsPerPage = 5;
     const [showRecurringOnly, setShowRecurringOnly] = useState(false);
-    const filteredTransactions = showRecurringOnly 
-    ? transactions.filter((t) => t.recurring) 
-    : transactions;
-    
-    const totalPages = Math.ceil(filteredTransactions.length / transactionsPerPage);
-    const [sortConfig, setSortConfig] = useState({ key: "date", direction: "desc" });
+    const [filterType, setFilterType] = useState("all");
+    const [selectedMonth, setSelectedMonth] = useState("");
 
-    // Sort transactions by default on mount
     useEffect(() => {
         const sortedData = [...testData].sort((a, b) => new Date(b.date) - new Date(a.date));
         setTransactions(sortedData);
     }, []);
 
-    const sortTransactions = (key) => {
-        let direction = "asc";
-        if (sortConfig.key === key && sortConfig.direction === "asc") {
-            direction = "desc";
-        } else if (sortConfig.key === key && sortConfig.direction === "desc") {
-            direction = "asc";
-        }
+    const filteredTransactions = transactions.filter((t) => {
+        const matchesRecurring = showRecurringOnly ? t.recurring : true;
+        const matchesType = filterType === "all" || t.type === filterType;
+        const matchesMonth = selectedMonth ? new Date(t.date).toISOString().slice(0, 7) === selectedMonth : true;
+        return matchesRecurring && matchesType && matchesMonth;
+    });
 
-        const sortedData = [...transactions].sort((a, b) => {
-            const valueA = key === "date" ? new Date(a[key]) : key === "amount" ? Number(a[key]) : a[key];
-            const valueB = key === "date" ? new Date(b[key]) : key === "amount" ? Number(b[key]) : b[key];
-
-            if (valueA < valueB) return direction === "asc" ? -1 : 1;
-            if (valueA > valueB) return direction === "asc" ? 1 : -1;
-            return 0;
-        });
-
-        setSortConfig({ key, direction });
-        setTransactions(sortedData);
-    };
-
-    const displayedTransactions = filteredTransactions.slice(
-        (currentPage - 1) * transactionsPerPage,
-        currentPage * transactionsPerPage
-    );
+    const totalPages = Math.ceil(filteredTransactions.length / transactionsPerPage);
+    const displayedTransactions = filteredTransactions.slice((currentPage - 1) * transactionsPerPage, currentPage * transactionsPerPage);
 
     return (
         <div>
-            <div className='mb-4 flex justify-center items-center'>
+            {/* Filters Section */}
+            <div className="mb-4 flex justify-center items-center gap-4">
+                {/* Recurring Filter Toggle */}
                 <label className="inline-flex items-center cursor-pointer">
-                    <span className="ms-3 ">All Transactions</span>
+                    <span className="ms-3">All Transactions</span>
                     <input 
                         type="checkbox" 
                         className="sr-only peer" 
@@ -71,26 +52,39 @@ const EditTransaction = () => {
                                     rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white 
                                     after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white 
                                     after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all 
-                                    dark:border-gray-600 peer-checked:bg-green-600 dark:peer-checked:bg-green-600 mr-2 ml-2">
+                                    dark:border-gray-600 peer-checked:bg-green-600 dark:peer-checked:bg-green-600 mx-2">
                     </div>
                     <span className="ms-3">Recurring</span>
                 </label>
+
+                {/* Transaction Type Filter */}
+                <select 
+                    className="border p-2 rounded"
+                    value={filterType} 
+                    onChange={(e) => setFilterType(e.target.value)}
+                >
+                    <option value="all">All</option>
+                    <option value="income">Income</option>
+                    <option value="expense">Expenses</option>
+                </select>
+
+                {/* Month Filter */}
+                <input 
+                    type="month" 
+                    className="border p-2 rounded"
+                    value={selectedMonth}
+                    onChange={(e) => setSelectedMonth(e.target.value)}
+                />
             </div>
+
+            {/* Table */}
             <table className="w-full border-collapse border border-gray-300">
                 <thead>
                     <tr className="bg-gray-200">
-                        <th className="border p-2 cursor-pointer" onClick={() => sortTransactions("amount")}>
-                            Amount {sortConfig.key === "amount" ? (sortConfig.direction === "asc" ? "▲" : "▼") : ""}
-                        </th>
-                        <th className="border p-2 cursor-pointer" onClick={() => sortTransactions("category")}>
-                            Category {sortConfig.key === "category" ? (sortConfig.direction === "asc" ? "▲" : "▼") : ""}
-                        </th>
-                        <th className="border p-2 cursor-pointer" onClick={() => sortTransactions("type")}>
-                            Type {sortConfig.key === "type" ? (sortConfig.direction === "asc" ? "▲" : "▼") : ""}
-                        </th>
-                        <th className="border p-2 cursor-pointer" onClick={() => sortTransactions("date")}>
-                            Date {sortConfig.key === "date" ? (sortConfig.direction === "asc" ? "▲" : "▼") : ""}
-                        </th>
+                        <th className="border p-2">Amount</th>
+                        <th className="border p-2">Category</th>
+                        <th className="border p-2">Type</th>
+                        <th className="border p-2">Date</th>
                         <th className="border p-2">Description</th>
                         <th className="border p-2">Actions</th>
                     </tr>
@@ -114,13 +108,13 @@ const EditTransaction = () => {
                 </tbody>
             </table>
             
+            {/* Pagination */}
             <div className="flex flex-col items-center mt-4">
-            <span className="text-sm text-green-700">
-                Showing {Math.min((currentPage - 1) * transactionsPerPage + 1, filteredTransactions.length)} &nbsp;
-                to {Math.min(currentPage * transactionsPerPage, filteredTransactions.length)} &nbsp;
-                of {filteredTransactions.length} Entries
-            </span>
-
+                <span className="text-sm text-green-700">
+                    Showing {Math.min((currentPage - 1) * transactionsPerPage + 1, filteredTransactions.length)} &nbsp;
+                    to {Math.min(currentPage * transactionsPerPage, filteredTransactions.length)} &nbsp;
+                    of {filteredTransactions.length} Entries
+                </span>
 
                 <div className="inline-flex mt-2">
                     <button 
