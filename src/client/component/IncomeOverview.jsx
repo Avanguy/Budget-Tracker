@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Income = () => {
+const IncomeOverview = () => {
   return (
     <div>
         <div className="border border-gray-300 p-4 rounded-lg">
@@ -10,4 +10,4 @@ const Income = () => {
   )
 }
 
-export default Income
+export default IncomeOverview

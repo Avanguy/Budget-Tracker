@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Expenses = () => {
+const ExpensesOverview = () => {
   return (
         <div className="border border-gray-300 p-4 rounded-lg">
             Expenses
@@ -9,4 +9,4 @@ const Expenses = () => {
   )
 }
 
-export default Expenses
+export default ExpensesOverview
