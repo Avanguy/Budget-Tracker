@@ -1,14 +1,30 @@
 import React from 'react'
 import IncomeOverview from './component/IncomeOverview'
-import { useState } from 'react'
+import { useState,useContext } from 'react'
 import ExpensesOverview from './component/ExpensesOverview'
 import AddTransactionModal from './component/AddTransactionModal'
+import { UserContext } from './component/UserProvider'
 const TransactionPage = () => {
+    const {user} = useContext(UserContext);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    console.log(isModalOpen)
-    const handleAddTransaction = (transactionData) => {
+    const handleAddTransaction = async (transactionData) => {
         console.log("New Transaction:", transactionData);
-        setIsModalOpen(false);
+        console.log(user)
+        try{
+            const addTransactionResponse = await fetch("http://localhost:5174/api/transaction", { // Ensure the correct API endpoint
+                method: "POST",
+                headers: {"Content-Type": "application/json",'Authorization': `Bearer ${user.token}`},
+                body: JSON.stringify(transactionData)
+            });
+            const data = await addTransactionResponse.json();
+            if (!addTransactionResponse.ok) {
+                throw new Error(data.error || "Failed to add transaction");
+            }
+            console.log("Transaction added successfully:", data);
+            setIsModalOpen(false);
+        } catch (error) {
+            console.error("Error adding transaction:", error);
+        }
     };
   return (
     <>

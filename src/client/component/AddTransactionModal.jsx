@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 
 const AddTransactionModal = ({ onSubmit, onClose }) => {
     const [transactionData, setTransactionData] = useState({
-        amount: '',
-        category: '',
+        amount: '12',
+        category: 'Salary',
         type: 'income',
         date: new Date().toISOString().split('T')[0], // Default to today's date
         description: '',
@@ -29,7 +29,7 @@ const AddTransactionModal = ({ onSubmit, onClose }) => {
     return (
         <div className="fixed inset-0 flex justify-center items-center bg-black/80 z-50">
             <div className="bg-white p-6 rounded-md shadow-md w-96">
-                <h2 className="text-lg font-bold mb-4">Add Transaction</h2>
+                <h2 className="text-lg font-bold mb-4 text-center">Add Transaction</h2>
                 <form onSubmit={handleSubmit} className="flex flex-col gap-2">
                     
                     {/* Amount Input */}
@@ -79,8 +79,8 @@ const AddTransactionModal = ({ onSubmit, onClose }) => {
 
                     {/* Buttons */}
                     <div className="flex justify-between mt-4">
-                        <button type="submit" className="btn-custom">Add</button>
                         <button type="button" onClick={onClose} className="btn-custom-close">Cancel</button>
+                        <button type="submit" className="btn-custom">Add</button>
                     </div>
                 </form>
             </div>

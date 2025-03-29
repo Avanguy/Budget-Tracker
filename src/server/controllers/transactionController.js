@@ -1,6 +1,6 @@
 
 import mongoose from "mongoose";
-import transactionModel from "../models/transcactionModel.js";
+import transactionModel from "../models/transactionModel.js";
 //get Transactions
 const getAllTransactions = async (req,res) =>{
     const Transactions = await transactionModel.find({})
@@ -43,7 +43,8 @@ const getTransactionsForUser = async (req,res) =>{
 }
 //add Transactions
 const addTransaction = async (req,res)=>{
-    const {userId,amount,category,type,date,description,recurring} = req.body
+    const {amount,category,type,date,description,recurring} = req.body
+    const userId = req.user;
     try{
         const Transaction = await transactionModel.create({userId,amount,category,type,date,description,recurring})
         res.status(200).json(Transaction)
