@@ -9,7 +9,7 @@ import EditTransaction from './component/EditTransaction'
 const TransactionPage = () => {
     const {user} = useContext(UserContext);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [activeComponent, setActiveComponent] = useState("YearReview");
+    const [activeComponent, setActiveComponent] = useState("EditTransaction"); // Default component to show
     const handleAddTransaction = async (transactionData) => {
         console.log("New Transaction:", transactionData);
         console.log(user)

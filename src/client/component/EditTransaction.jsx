@@ -15,8 +15,12 @@ const EditTransaction = () => {
     const [transactions, setTransactions] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const transactionsPerPage = 5;
-    const totalPages = Math.ceil(transactions.length / transactionsPerPage);
+    const [showRecurringOnly, setShowRecurringOnly] = useState(false);
+    const filteredTransactions = showRecurringOnly 
+    ? transactions.filter((t) => t.recurring) 
+    : transactions;
     
+    const totalPages = Math.ceil(filteredTransactions.length / transactionsPerPage);
     const [sortConfig, setSortConfig] = useState({ key: "date", direction: "desc" });
 
     // Sort transactions by default on mount
@@ -46,14 +50,32 @@ const EditTransaction = () => {
         setTransactions(sortedData);
     };
 
-    // Only display transactions on the current page
-    const displayedTransactions = transactions.slice(
+    const displayedTransactions = filteredTransactions.slice(
         (currentPage - 1) * transactionsPerPage,
         currentPage * transactionsPerPage
     );
 
     return (
         <div>
+            <div className='mb-4 flex justify-center items-center'>
+                <label className="inline-flex items-center cursor-pointer">
+                    <span className="ms-3 ">All Transactions</span>
+                    <input 
+                        type="checkbox" 
+                        className="sr-only peer" 
+                        checked={showRecurringOnly} 
+                        onChange={() => setShowRecurringOnly(!showRecurringOnly)}
+                    />
+                    <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 
+                                    dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full 
+                                    rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white 
+                                    after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white 
+                                    after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all 
+                                    dark:border-gray-600 peer-checked:bg-green-600 dark:peer-checked:bg-green-600 mr-2 ml-2">
+                    </div>
+                    <span className="ms-3">Recurring</span>
+                </label>
+            </div>
             <table className="w-full border-collapse border border-gray-300">
                 <thead>
                     <tr className="bg-gray-200">
@@ -94,9 +116,9 @@ const EditTransaction = () => {
             
             <div className="flex flex-col items-center mt-4">
             <span className="text-sm text-green-700">
-                Showing {Math.min((currentPage - 1) * transactionsPerPage + 1, transactions.length)} &nbsp;
-                to {Math.min(currentPage * transactionsPerPage, transactions.length)} &nbsp;
-                of {transactions.length} Entries
+                Showing {Math.min((currentPage - 1) * transactionsPerPage + 1, filteredTransactions.length)} &nbsp;
+                to {Math.min(currentPage * transactionsPerPage, filteredTransactions.length)} &nbsp;
+                of {filteredTransactions.length} Entries
             </span>
 
 
