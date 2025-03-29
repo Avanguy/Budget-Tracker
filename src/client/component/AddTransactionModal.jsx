@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 
 const AddTransactionModal = ({ onSubmit, onClose }) => {
     const [transactionData, setTransactionData] = useState({
-        amount: '12',
-        category: 'Salary',
+        amount: '',
+        category: '',
         type: 'income',
         date: new Date().toISOString().split('T')[0], // Default to today's date
         description: '',
