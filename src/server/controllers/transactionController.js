@@ -55,20 +55,16 @@ const addTransaction = async (req,res)=>{
 }
 //delete Transaction
 const delTransaction = async (req,res) =>{
-    const tokenId = req.Transaction.id;
+  try {
     const delId = req.params.id;
-    const isAdmin = req.Transaction.role === 'Admin';
-    if (!isAdmin && tokenId !== delId) {
-        return res.status(403).json({ error: 'You are not authorized' });
+    const Transaction = await transactionModel.findOneAndDelete({_id: delId})
+    if(!Transaction) {
+      return res.status(400).json({error: 'No such Transactions'})
     }
-  if (!mongoose.Types.ObjectId.isValid(delId)) {
-    return res.status(400).json({error: 'No such Transactions'})
+    res.status(200).json(Transaction)
+  } catch (error) {
+    res.status(500).json({error})
   }
-  const Transaction = await transactionModel.findOneAndDelete({_id: delId})
-  if(!Transaction) {
-    return res.status(400).json({error: 'No such Transactions'})
-  }
-  res.status(200).json(Transaction)
 }
 //update Transaction
 const updateTransaction = async (req,res) =>{

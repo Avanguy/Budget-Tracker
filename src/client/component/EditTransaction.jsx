@@ -1,17 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
-const testData = [
-    { id: "1", amount: 1500, category: "Salary", type: "income", date: "2025-03-20", description: "March paycheck", recurring: true, recurrenceFrequency: "Monthly" },
-    { id: "2", amount: 200, category: "Groceries", type: "expense", date: "2025-03-22", description: "Supermarket shopping", recurring: false },
-    { id: "3", amount: 50, category: "Transport", type: "expense", date: "2025-03-23", description: "Train ticket", recurring: false },
-    { id: "4", amount: 100, category: "Entertainment", type: "expense", date: "2025-03-25", description: "Concert ticket", recurring: false },
-    { id: "5", amount: 60, category: "Subscription", type: "expense", date: "2025-03-01", description: "Netflix & Spotify", recurring: true, recurrenceFrequency: "Monthly" },
-    { id: "6", amount: 200, category: "Freelance", type: "income", date: "2025-03-15", description: "Freelance project payment", recurring: false },
-    { id: "7", amount: 500, category: "Investment", type: "income", date: "2025-03-10", description: "Stock dividends", recurring: false },
-    { id: "8", amount: 75, category: "Health", type: "expense", date: "2025-02-18", description: "Doctor appointment", recurring: false }
-];
 
-const EditTransaction = ({fetchedTransactions}) => {
+const EditTransaction = ({fetchedTransactions,user,setFetchedTransactions}) => {
     const [transactions, setTransactions] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const transactionsPerPage = 5;
@@ -24,7 +14,7 @@ const EditTransaction = ({fetchedTransactions}) => {
         if(fetchedTransactions && fetchedTransactions.length > 0) {
             sortedData = [...fetchedTransactions].sort((a, b) => new Date(b.date) - new Date(a.date));
         } else {
-             sortedData = [...testData].sort((a, b) => new Date(b.date) - new Date(a.date));
+             sortedData = []
         }
         setTransactions(sortedData);
     }, [fetchedTransactions]);
@@ -38,7 +28,26 @@ const EditTransaction = ({fetchedTransactions}) => {
 
     const totalPages = Math.ceil(filteredTransactions.length / transactionsPerPage);
     const displayedTransactions = filteredTransactions.slice((currentPage - 1) * transactionsPerPage, currentPage * transactionsPerPage);
-
+    const deleteTransaction = async (id) => {
+        if (!window.confirm("Are you sure you wish to delete this transaction?")) {
+            return;
+        }
+        try {
+            const response = await fetch(`http://localhost:5174/api/transaction/${id}`, {
+                method: "DELETE",
+                headers: {"Content-Type": "application/json",'Authorization': `Bearer ${user.token}`},
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.error || "Failed to fetch transactions");
+            }
+            const filteredData = transactions.filter(transaction => transaction._id !== id);
+            setTransactions(filteredData);
+            setFetchedTransactions(filteredData)
+        } catch (error) {
+            console.error("Error deleting transaction:", error);
+        }
+    }
     return (
         <div>
             {/* Filters Section */}
@@ -106,7 +115,7 @@ const EditTransaction = ({fetchedTransactions}) => {
                             <td className="border p-2">{transaction.description || "N/A"}</td>
                             <td className="border p-2">
                                 <button className="btn-custom">Edit</button>
-                                <button className="btn-custom-close">Delete</button>
+                                <button className="btn-custom-close" onClick={()=>deleteTransaction(transaction._id)}>Delete</button>
                             </td>
                         </tr>
                     ))}

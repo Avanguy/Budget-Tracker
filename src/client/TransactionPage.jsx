@@ -25,6 +25,7 @@ const TransactionPage = () => {
                 throw new Error(data.error || "Failed to add transaction");
             }
             setIsModalOpen(false);
+            setFetchedTransactions((prevTransactions) => [...prevTransactions, data]); // Update the transactions state with the new transaction
         } catch (error) {
             console.error("Error adding transaction:", error);
         }
@@ -48,6 +49,7 @@ const TransactionPage = () => {
         }
     }
     useEffect(() => {
+        console.log(user)
         if(!user) return; // If user is not logged in, do not fetch transactions
         getTransactions();
     },[user])
@@ -67,7 +69,7 @@ return (
         {!loading ?( 
             <div className="flex justify-center m-4">
                     {activeComponent === "YearReview" && <YearReview />}
-                    {activeComponent === "EditTransaction" && <EditTransaction fetchedTransactions={fetchedTransactions} />}
+                    {activeComponent === "EditTransaction" && <EditTransaction setFetchedTransactions={setFetchedTransactions} fetchedTransactions={fetchedTransactions} user={user}/>}
                     {!activeComponent && <p>Select a component to view</p>}
             </div>)
             :
