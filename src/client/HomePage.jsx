@@ -9,7 +9,7 @@ function Homepage(){
   const {user} = useContext(UserContext);
   return (
     <>
-        {user?.token === "" ?  <Home/> : <Dashboard/>}
+        {user === null ?  <Home/> : <Dashboard/>}
     </>
   );
 }

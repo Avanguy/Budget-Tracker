@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import IncomeOverview from './component/IncomeOverview'
 import { useState,useContext } from 'react'
 import ExpensesOverview from './component/ExpensesOverview'
@@ -29,10 +29,28 @@ const TransactionPage = () => {
             console.error("Error adding transaction:", error);
         }
     };
-
+    const getTransactions = async () => {
+        try {
+            const response = await fetch("http://localhost:5174/api/transaction/user", { // Ensure the correct API endpoint
+                method: "GET",
+                headers: {"Content-Type": "application/json",'Authorization': `Bearer ${user.token}`}
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.error || "Failed to fetch transactions");
+            }
+            console.log("Transactions fetched successfully:", data);
+        } catch (error) {
+            console.error("Error fetching transactions:", error);
+        }
+    }
+    useEffect(() => {
+        if(!user) return; // If user is not logged in, do not fetch transactions
+        getTransactions();
+    },[user])
 return (
     <>
-        <h2>Transactions</h2>
+        <h2 className='text-center'>Transactions</h2>
         <div className="flex justify-center items-center">
                 <IncomeOverview />
                 <ExpensesOverview />

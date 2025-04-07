@@ -25,7 +25,7 @@ const getTransaction = async (req,res) =>{
   res.status(200).json(Transaction)
 }
 const getTransactionsForUser = async (req,res) =>{
-    const { userId } = req.body;
+    const userId = req.user.id;
     /* const isAdmin = req.Transaction.role === 'Admin';
     if (!isAdmin && id !== req.params.id) {
         return res.status(403).json({ error: 'You are not authorized' });

@@ -78,7 +78,7 @@ const Header = () => {
     <header className='flex justify-between items-center p-4 bg-gradient-to-r from-green-900 to-green-900 via-green-800'>
         {user && (
             <nav className="flex gap-4">
-                <a href="/dashboard" className="hover:underline text-white">Dashboard</a>
+                <a href="/" className="hover:underline text-white">Dashboard</a>
                 <a href="/transactions" className="hover:underline text-white">Transactions</a>
                 <a href="/reports" className="hover:underline text-white">Reports</a>
             </nav>
@@ -90,7 +90,8 @@ const Header = () => {
         {user ? 
         <div className='flex'>
             <h2 className='text-2xl font-bold text-white mr-5'>Welcome {user.username}!</h2>
-            <button className="btn-custom" onClick={() => {logout()}}>Log Out</button>
+            <button className="btn-custom" onClick={() => {logout();
+            navigate("/");}}>Log Out</button>
         </div>
         
     :
