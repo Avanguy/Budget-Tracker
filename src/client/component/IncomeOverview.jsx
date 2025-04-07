@@ -1,29 +1,42 @@
-import React from 'react'
-import { useState } from 'react'
-const IncomeOverview = () => {
-  const [incomeData, setIncomeData] = useState(null)
-  return (
-    <div>
-        <div className="border border-gray-300 p-4 rounded-lg">
-            <h2 className='text-lg font-semibold'>
-              Income Overview
-            </h2>
-            <p className="text-gray-500 text-sm">
-              This is a summary of your income for the current month.
-            </p>
-            <div className="mt-4">
-              {incomeData ? (
-                <>
-                  <h3 className="">Total Income</h3>
-                  <p className="text-xl font-bold">$5,000</p>
-                </>
-              ) : (
-                <p className="text-red-500 text-lg font-bold">No Income Data Available</p>
-              )}
-            </div>
-        </div>
-    </div>
-  )
-}
+import React, { useContext, useMemo } from "react";
+import { TransactionContext } from './TransactionProvider';
 
-export default IncomeOverview
+const IncomeOverview = ({ selectedMonth }) => {
+  const { transactions, loading } = useContext(TransactionContext);
+  const currentMonth = new Date().toISOString().slice(0, 7);
+  const monthToUse = selectedMonth || currentMonth;
+
+  const incomeData = useMemo(() => {
+    return transactions.filter((tx) =>
+      tx.type === "income" &&
+      new Date(tx.date).toISOString().slice(0, 7) === monthToUse
+    );
+  }, [transactions, monthToUse]);
+
+  const totalIncome = useMemo(() => {
+    return incomeData.reduce((sum, tx) => sum + tx.amount, 0);
+  }, [incomeData]);
+
+  if (loading) return <p>Loading income data...</p>;
+
+  return (
+    <div className="p-4 rounded-2xl shadow bg-white">
+      <h2 className="text-xl font-semibold mb-2">Income Overview</h2>
+      <p className="text-3xl text-green-600 font-bold">£{totalIncome.toFixed(2)}</p>
+
+      <ul className="mt-4 space-y-2">
+        {incomeData.map((tx) => (
+          <li key={tx._id} className="border-b pb-2">
+            <div className="flex justify-between text-sm">
+              <span>{tx.category}</span>
+              <span>£{tx.amount}</span>
+            </div>
+            <p className="text-xs text-gray-500">{new Date(tx.date).toLocaleDateString()}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default IncomeOverview;

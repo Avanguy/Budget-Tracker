@@ -11,6 +11,11 @@ import LoadingSpinner from './component/LoadingSpinner'
 const TransactionPage = () => {
     const {transactions, setTransactions, loading} = useContext(TransactionContext);
     const {user} = useContext(UserContext);
+    const [selectedMonth, setSelectedMonth] = useState(() => {
+        // Default to current month in format YYYY-MM
+        const now = new Date();
+        return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+      });
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [activeComponent, setActiveComponent] = useState("EditTransaction"); // Default component to show
     const [fetchedTransactions, setFetchedTransactions] = useState([]);
@@ -39,8 +44,8 @@ return (
     <>
         <h2 className='text-center'>Transactions</h2>
         <div className="flex justify-center items-center">
-                <IncomeOverview />
-                <ExpensesOverview />
+                <IncomeOverview selectedMonth={selectedMonth} />
+                <ExpensesOverview selectedMonth={selectedMonth}/>
                 <div className='flex flex-col justify-center '>
                         <p className='text-center text-3xl underline m-2'>Transaction Menu</p>
                         <button className='btn-custom' onClick={() => setIsModalOpen(true)}>Add New Transaction</button>
@@ -51,7 +56,7 @@ return (
         {!loading ?( 
             <div className="flex justify-center m-4">
                     {activeComponent === "YearReview" && <YearReview />}
-                    {activeComponent === "EditTransaction" && <EditTransaction setTransactions={setTransactions} fetchedTransactions={fetchedTransactions} user={user}/>}
+                    {activeComponent === "EditTransaction" && <EditTransaction setPageSelectedMonth = {setSelectedMonth} setTransactions={setTransactions} fetchedTransactions={fetchedTransactions} user={user}/>}
                     {!activeComponent && <p>Select a component to view</p>}
             </div>)
             :

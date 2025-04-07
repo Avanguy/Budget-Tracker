@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import AddTransactionModal from './AddTransactionModal'
 
-const EditTransaction = ({fetchedTransactions,user,setTransactions}) => {
+const EditTransaction = ({fetchedTransactions,user,setTransactions,setPageSelectedMonth}) => {
     const [editTransactions, setEditTransactions] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const transactionsPerPage = 5;
     const [showRecurringOnly, setShowRecurringOnly] = useState(false);
     const [filterType, setFilterType] = useState("all");
-    const [selectedMonth, setSelectedMonth] = useState("");
-    const [editData,setEditData] = useState({});
+    const [selectedMonth, setSelectedMonth] = useState();
+    const [editData, setEditData] = useState("");
+      
 
     useEffect(() => {
         let sortedData
@@ -82,6 +83,11 @@ const EditTransaction = ({fetchedTransactions,user,setTransactions}) => {
         setEditData(transaction)
         setIsModalOpen(true);
     };
+    const handleMonthChange = (e) => {
+        const newMonth = e.target.value;
+        setSelectedMonth(newMonth);  // Updates the selected month for the overview
+        setPageSelectedMonth(newMonth); // Updates the page view month
+      };
     return (
         <div>
             {/* Filters Section */}
@@ -121,7 +127,7 @@ const EditTransaction = ({fetchedTransactions,user,setTransactions}) => {
                     type="month" 
                     className="border p-2 rounded"
                     value={selectedMonth}
-                    onChange={(e) => setSelectedMonth(e.target.value)}
+                    onChange={handleMonthChange}
                 />
             </div>
 
