@@ -11,7 +11,7 @@ const testData = [
     { id: "8", amount: 75, category: "Health", type: "expense", date: "2025-02-18", description: "Doctor appointment", recurring: false }
 ];
 
-const EditTransaction = () => {
+const EditTransaction = ({fetchedTransactions}) => {
     const [transactions, setTransactions] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const transactionsPerPage = 5;
@@ -20,9 +20,14 @@ const EditTransaction = () => {
     const [selectedMonth, setSelectedMonth] = useState("");
 
     useEffect(() => {
-        const sortedData = [...testData].sort((a, b) => new Date(b.date) - new Date(a.date));
+        let sortedData
+        if(fetchedTransactions && fetchedTransactions.length > 0) {
+            sortedData = [...fetchedTransactions].sort((a, b) => new Date(b.date) - new Date(a.date));
+        } else {
+             sortedData = [...testData].sort((a, b) => new Date(b.date) - new Date(a.date));
+        }
         setTransactions(sortedData);
-    }, []);
+    }, [fetchedTransactions]);
 
     const filteredTransactions = transactions.filter((t) => {
         const matchesRecurring = showRecurringOnly ? t.recurring : true;
@@ -91,7 +96,7 @@ const EditTransaction = () => {
                 </thead>
                 <tbody>
                     {displayedTransactions.map((transaction) => (
-                        <tr key={transaction.id} className="text-center">
+                        <tr key={transaction._id} className="text-center">
                             <td className="border p-2">£{transaction.amount}</td>
                             <td className="border p-2">{transaction.category}</td>
                             <td className={`border p-2 ${transaction.type === "income" ? "bg-green-400" : "bg-red-400"}`}>
