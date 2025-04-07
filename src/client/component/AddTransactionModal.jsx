@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 
-const AddTransactionModal = ({ onSubmit, onClose }) => {
+const AddTransactionModal = ({ onSubmit, onClose, editData }) => {
     const [transactionData, setTransactionData] = useState({
-        amount: '',
-        category: '',
-        type: 'income',
-        date: new Date().toISOString().split('T')[0], // Default to today's date
-        description: '',
-        recurring: false,
-        recurrenceFrequency: '' // New field for recurrence
+        _id: editData?._id || null,
+      amount: editData?.amount || '',
+      category: editData?.category || '',
+      type: editData?.type || 'income',
+      date: editData?.date ? new Date(editData.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0], // Extract only the date part
+      description: editData?.description || '',
+      recurring: editData?.recurring || false,
+      recurrenceFrequency: editData?.recurrenceFrequency || '' // Fallback to empty string if no recurrenceFrequency in editData
     });
 
     const commonCategories = ["Salary", "Food", "Transport", "Entertainment", "Shopping", "Health", "Rent", "Utilities"];

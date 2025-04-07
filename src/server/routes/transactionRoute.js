@@ -10,6 +10,6 @@ router.get('/user',getTransactionsForUser)
 router.get('/:id',getTransaction)
 router.get('/',getAllTransactions)
 router.delete('/:id',delTransaction)
-router.put('/:id',updateTransaction)
+router.put('/',updateTransaction)
 
 export default router

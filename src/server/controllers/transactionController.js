@@ -68,22 +68,36 @@ const delTransaction = async (req,res) =>{
 }
 //update Transaction
 const updateTransaction = async (req,res) =>{
-    const id = req.Transaction.id;
-    const isAdmin = req.Transaction.role === 'Admin';
-    if (!isAdmin && id !== req.params.id) {
-        return res.status(403).json({ error: 'You are not authorized' });
+  try {
+    const { _id,amount, category, type, date, description, recurring, recurrenceFrequency } = req.body; // Get the updated transaction data from the request body
+    console.log(_id)
+    // Find the transaction by its _id and update it with the new data
+    const transaction = await transactionModel.findByIdAndUpdate(
+      _id,
+      {
+        amount,
+        category,
+        type,
+        date,
+        description,
+        recurring,
+        recurrenceFrequency,
+      },
+      { new: true } // This option returns the updated document
+    );
+
+    // If the transaction is not found, return a 404 error
+    if (!transaction) {
+      return res.status(404).json({ error: 'Transaction not found' });
     }
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(400).json({error: 'No such Transaction'})
-    }
-    const Transaction = await transactionModel.findOneAndUpdate({_id: id}, {
-        ...req.body
-    })
-    if (!Transaction) {
-        return res.status(400).json({error: 'No such Transaction'})
-    }
-    res.status(200).json(Transaction)
-}
+
+    // Return the updated transaction
+    res.status(200).json(transaction);
+  } catch (error) {
+    console.error("Error updating transaction:", error);
+    res.status(500).json({ error: 'Failed to update transaction' });
+  }
+};
   export {
     getAllTransactions,
     getTransaction,

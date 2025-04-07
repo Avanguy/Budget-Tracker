@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-
+import AddTransactionModal from './AddTransactionModal'
 
 const EditTransaction = ({fetchedTransactions,user,setFetchedTransactions}) => {
     const [transactions, setTransactions] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const transactionsPerPage = 5;
     const [showRecurringOnly, setShowRecurringOnly] = useState(false);
     const [filterType, setFilterType] = useState("all");
     const [selectedMonth, setSelectedMonth] = useState("");
+    const [editData,setEditData] = useState({});
 
     useEffect(() => {
         let sortedData
@@ -28,6 +30,34 @@ const EditTransaction = ({fetchedTransactions,user,setFetchedTransactions}) => {
 
     const totalPages = Math.ceil(filteredTransactions.length / transactionsPerPage);
     const displayedTransactions = filteredTransactions.slice((currentPage - 1) * transactionsPerPage, currentPage * transactionsPerPage);
+    const handleEditTransaction = async (transactionData) => {
+        try {
+            // Ensure the correct API endpoint (with the transaction ID)
+            const editTransactionResponse = await fetch(`http://localhost:5174/api/transaction/`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    'Authorization': `Bearer ${user.token}`, // Assuming user token is passed as part of props or state
+                },
+                body: JSON.stringify(transactionData),
+            });
+            const data = await editTransactionResponse.json();
+            if (!editTransactionResponse.ok) {
+                throw new Error(data.error || "Failed to update transaction");
+            }
+            // Close the modal after successful update
+            setIsModalOpen(false);
+            // Assuming you want to update the local transactions state after edit
+            setFetchedTransactions((prevTransactions) => 
+                prevTransactions.map((transaction) => 
+                    transaction._id === data._id ? data : transaction // Replace the updated transaction in the list
+                )
+            );    
+        } catch (error) {
+            console.error("Error editing transaction:", error);
+        }
+    };
+    
     const deleteTransaction = async (id) => {
         if (!window.confirm("Are you sure you wish to delete this transaction?")) {
             return;
@@ -48,6 +78,10 @@ const EditTransaction = ({fetchedTransactions,user,setFetchedTransactions}) => {
             console.error("Error deleting transaction:", error);
         }
     }
+    const openEditMenu = (transaction) => {
+        setEditData(transaction)
+        setIsModalOpen(true);
+    };
     return (
         <div>
             {/* Filters Section */}
@@ -114,7 +148,7 @@ const EditTransaction = ({fetchedTransactions,user,setFetchedTransactions}) => {
                             <td className="border p-2">{new Date(transaction.date).toLocaleDateString()}</td>
                             <td className="border p-2">{transaction.description || "N/A"}</td>
                             <td className="border p-2">
-                                <button className="btn-custom">Edit</button>
+                                <button className="btn-custom" onClick={()=>openEditMenu(transaction)}>Edit</button>
                                 <button className="btn-custom-close" onClick={()=>deleteTransaction(transaction._id)}>Delete</button>
                             </td>
                         </tr>
@@ -147,6 +181,13 @@ const EditTransaction = ({fetchedTransactions,user,setFetchedTransactions}) => {
                     </button>
                 </div>
             </div>
+            {isModalOpen && (
+                    <AddTransactionModal 
+                            onSubmit={handleEditTransaction} 
+                            onClose={() => setIsModalOpen(false)} 
+                            editData = {editData}
+                    />
+            )}
         </div>
     );
 };
