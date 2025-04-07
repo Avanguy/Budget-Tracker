@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import AddTransactionModal from './AddTransactionModal'
 
-const EditTransaction = ({fetchedTransactions,user,setFetchedTransactions}) => {
-    const [transactions, setTransactions] = useState([]);
+const EditTransaction = ({fetchedTransactions,user,setTransactions}) => {
+    const [editTransactions, setEditTransactions] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const transactionsPerPage = 5;
@@ -18,10 +18,10 @@ const EditTransaction = ({fetchedTransactions,user,setFetchedTransactions}) => {
         } else {
              sortedData = []
         }
-        setTransactions(sortedData);
+        setEditTransactions(sortedData);
     }, [fetchedTransactions]);
 
-    const filteredTransactions = transactions.filter((t) => {
+    const filteredTransactions = editTransactions.filter((t) => {
         const matchesRecurring = showRecurringOnly ? t.recurring : true;
         const matchesType = filterType === "all" || t.type === filterType;
         const matchesMonth = selectedMonth ? new Date(t.date).toISOString().slice(0, 7) === selectedMonth : true;
@@ -48,7 +48,7 @@ const EditTransaction = ({fetchedTransactions,user,setFetchedTransactions}) => {
             // Close the modal after successful update
             setIsModalOpen(false);
             // Assuming you want to update the local transactions state after edit
-            setFetchedTransactions((prevTransactions) => 
+            setTransactions((prevTransactions) => 
                 prevTransactions.map((transaction) => 
                     transaction._id === data._id ? data : transaction // Replace the updated transaction in the list
                 )
@@ -71,9 +71,9 @@ const EditTransaction = ({fetchedTransactions,user,setFetchedTransactions}) => {
             if (!response.ok) {
                 throw new Error(data.error || "Failed to fetch transactions");
             }
-            const filteredData = transactions.filter(transaction => transaction._id !== id);
+            const filteredData = editTransactions.filter(transaction => transaction._id !== id);
             setTransactions(filteredData);
-            setFetchedTransactions(filteredData)
+            setTransactions(filteredData)
         } catch (error) {
             console.error("Error deleting transaction:", error);
         }

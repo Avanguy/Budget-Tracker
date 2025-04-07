@@ -81,7 +81,7 @@ const AddTransactionModal = ({ onSubmit, onClose, editData }) => {
                     {/* Buttons */}
                     <div className="flex justify-between mt-4">
                         <button type="button" onClick={onClose} className="btn-custom-close">Cancel</button>
-                        <button type="submit" className="btn-custom">Add</button>
+                        <button type="submit" className="btn-custom">Confirm</button>
                     </div>
                 </form>
             </div>

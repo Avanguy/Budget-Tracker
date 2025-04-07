@@ -6,13 +6,14 @@ import AddTransactionModal from './component/AddTransactionModal'
 import { UserContext } from './component/UserProvider'
 import YearReview from './component/YearReview'
 import EditTransaction from './component/EditTransaction'
+import { TransactionContext } from './component/TransactionProvider'
 import LoadingSpinner from './component/LoadingSpinner'
 const TransactionPage = () => {
+    const {transactions, setTransactions, loading} = useContext(TransactionContext);
     const {user} = useContext(UserContext);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [activeComponent, setActiveComponent] = useState("EditTransaction"); // Default component to show
     const [fetchedTransactions, setFetchedTransactions] = useState([]);
-    const [loading, setLoading] = useState(false); // Loading state
     const handleAddTransaction = async (transactionData) => {
         try{
             const addTransactionResponse = await fetch("http://localhost:5174/api/transaction", { // Ensure the correct API endpoint
@@ -30,29 +31,10 @@ const TransactionPage = () => {
             console.error("Error adding transaction:", error);
         }
     };
-    const getTransactions = async () => {
-        setLoading(true); // Set loading to true when fetching transactions
-        try {
-            const response = await fetch("http://localhost:5174/api/transaction/user", { // Ensure the correct API endpoint
-                method: "GET",
-                headers: {"Content-Type": "application/json",'Authorization': `Bearer ${user.token}`}
-            });
-            const data = await response.json();
-            if (!response.ok) {
-                throw new Error(data.error || "Failed to fetch transactions");
-            }
-            setFetchedTransactions(data)
-            setLoading(false); // Set loading to false after fetching transactions
-        } catch (error) {
-            setLoading(false)
-            console.error("Error fetching transactions:", error);
-        }
-    }
     useEffect(() => {
-        console.log(user)
         if(!user) return; // If user is not logged in, do not fetch transactions
-        getTransactions();
-    },[user])
+        setFetchedTransactions(transactions); // Set the fetched transactions to the state
+    },[transactions,user])
 return (
     <>
         <h2 className='text-center'>Transactions</h2>
@@ -69,7 +51,7 @@ return (
         {!loading ?( 
             <div className="flex justify-center m-4">
                     {activeComponent === "YearReview" && <YearReview />}
-                    {activeComponent === "EditTransaction" && <EditTransaction setFetchedTransactions={setFetchedTransactions} fetchedTransactions={fetchedTransactions} user={user}/>}
+                    {activeComponent === "EditTransaction" && <EditTransaction setTransactions={setTransactions} fetchedTransactions={fetchedTransactions} user={user}/>}
                     {!activeComponent && <p>Select a component to view</p>}
             </div>)
             :
