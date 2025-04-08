@@ -1,5 +1,7 @@
 import React from 'react';
 import { ResponsiveContainer, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Line, Bar } from 'recharts';
+import { Cell } from 'recharts';
+const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#a4de6c', '#d0ed57', '#8dd1e1'];
 
 const ChartDisplay = ({
   data,
@@ -24,7 +26,11 @@ const ChartDisplay = ({
           {chartType === 'line' ? (
             <Line type="monotone" dataKey={dataKeyY} stroke="#8884d8" />
           ) : chartType === 'bar' ? (
-            <Bar dataKey={dataKeyY} fill="#82ca9d" />
+            <Bar dataKey={dataKeyY}>
+              {data.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              ))}
+            </Bar>
           ) : null}
         </Chart>
       </ResponsiveContainer>

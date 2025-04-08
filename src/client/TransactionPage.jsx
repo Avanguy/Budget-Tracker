@@ -31,7 +31,8 @@ const TransactionPage = () => {
                 throw new Error(data.error || "Failed to add transaction");
             }
             setIsModalOpen(false);
-            setFetchedTransactions((prevTransactions) => [...prevTransactions, data]); // Update the transactions state with the new transaction
+            setTransactions((prevTransactions) => [...prevTransactions, data])
+            
         } catch (error) {
             console.error("Error adding transaction:", error);
         }

@@ -1,43 +1,36 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import ChartDisplay from './ChartDisplay';
 import { LineChart,BarChart } from 'recharts';
 import { formatToChartData } from './util';
+import { TransactionContext } from './TransactionProvider'
+import LoadingSpinner from './LoadingSpinner'
 
-const data = [
-    { name: 'January', uv: 4000, pv: 2400 },
-    { name: 'February', uv: 3000, pv: 1398 },
-    { name: 'March', uv: 2000, pv: 9800 },
-    { name: 'April', uv: 2780, pv: 3908 },
-  ];
-  const transactions = [
-    { category: 'Food', amount: 50 },
-    { category: 'Food', amount: 30 },
-    { category: 'Entertainment', amount: 100 },
-    { category: 'Transport', amount: 40 },
-    { category: 'Entertainment', amount: 70 },
-    { category: 'Transport', amount: 20 },
-  ];
   
 const ReportComponent = () => {
-  const chartData = formatToChartData(transactions)
+  const {transactions} = useContext(TransactionContext);
+  const incomeChartFormat = formatToChartData(transactions, 'income')
+  const expensesChartFormat = formatToChartData(transactions, 'expense')
+  console.log(expensesChartFormat)
+  /* const chartData = formatToChartData(transactions) */
+
   return (
     <div>
       <div>
         <ChartDisplay
-                data={chartData}
+                data={incomeChartFormat}
                 chartComponent={BarChart}
                 dataKeyX="category"
                 dataKeyY="amount"
                 chartType="bar"
-                title="Monthly Data"
+                title="Income Data"
             />
             <ChartDisplay
-                data={data}
-                chartComponent={LineChart}
-                dataKeyX="name"
-                dataKeyY="pv"
-                chartType="line"
-                title="Monthly Data"
+                data={expensesChartFormat}
+                chartComponent={BarChart}
+                dataKeyX="category"
+                dataKeyY="amount"
+                chartType="bar"
+                title="Expenses Data"
             />
         </div>
     </div>
