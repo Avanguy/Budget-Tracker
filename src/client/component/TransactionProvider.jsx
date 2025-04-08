@@ -26,7 +26,7 @@ export const TransactionProvider = ({ children }) => {
             console.error("Error fetching transactions:", error);
         }
     }
-
+    if (!user) return; // If user is not logged in, do not fetch transactions 
     getTransactions();
   }, [user]);
 

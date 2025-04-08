@@ -60,7 +60,10 @@ return (
                     {!activeComponent && <p>Select a component to view</p>}
             </div>)
             :
-            <LoadingSpinner/>
+            <>
+                <LoadingSpinner/>
+                <p className='text-center'>Loading data...</p>
+            </>
         }
             {isModalOpen && (
                     <AddTransactionModal 
