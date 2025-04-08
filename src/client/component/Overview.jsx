@@ -30,7 +30,10 @@ const Overview = ({ selectedMonth, setSelectedMonth }) => {
   return (
     <div className="border border-gray-300 p-6 rounded-2xl bg-white shadow-md col-span-2">
       {loading ? (
-        <LoadingSpinner />
+        <>
+          <LoadingSpinner />
+          <p className='text-center'>Loading Overview...</p>
+        </>
       ) : (
         <>
           <div className="flex justify-between items-center mb-4">
