@@ -13,7 +13,10 @@ const TransactionsInsights = ({ filteredTransactions, filteredByDate, transactio
   }, null);
 
   // Find any significant individual transactions (uncombined data)
-  const largeTransactions = transactionType === "expense"? filteredByDate.filter(tx => tx.amount > 100) : 0 // Transactions over £100
+  const largeTransactions = filteredByDate.filter(tx => tx.amount > 100); // Transactions over £100
+
+  // Filter recurring transactions
+  const recurringTransactions = filteredByDate.filter(tx => tx.recurring);
 
   // Helper function to display verbage based on the transaction type (expense or income)
   const getTransactionMessage = () => {
@@ -36,7 +39,7 @@ const TransactionsInsights = ({ filteredTransactions, filteredByDate, transactio
 
   return (
     <div className="insights-container">
-      <h3 className="text-lg font-bold text-green-600 mb-2 underline ">Insights</h3>
+      <h3 className="text-lg font-bold text-green-600 mb-2">Insights</h3>
 
       {/* Total Amount */}
       <p className="insight">
@@ -52,7 +55,7 @@ const TransactionsInsights = ({ filteredTransactions, filteredByDate, transactio
 
       {/* Category Breakdown */}
       <div>
-        <h4 className="text-lg font-semibold text-green-600 mb-2 underline">Category Breakdown</h4>
+        <h4 className='font-bold underline'>Category Breakdown</h4>
         <ul>
           {filteredTransactions.map((categoryData) => (
             <li key={categoryData.category}>
@@ -65,7 +68,7 @@ const TransactionsInsights = ({ filteredTransactions, filteredByDate, transactio
       {/* Large Transactions */}
       {largeTransactions.length > 0 && (
         <div>
-          <h4 className="text-lg font-semibold text-green-600 mb-2 underline">Large Transactions</h4>
+          <h4 className="text-lg font-semibold text-red-600 mb-2">Large Transactions</h4>
           <ul>
             {largeTransactions.map((tx) => (
               <li key={tx.id}>
@@ -81,6 +84,28 @@ const TransactionsInsights = ({ filteredTransactions, filteredByDate, transactio
       )}
       {largeTransactions.length === 0 && (
         <p className="insight">No major transactions to highlight this period.</p>
+      )}
+
+      {/* Recurring Payments */}
+      {recurringTransactions.length > 0 && (
+        <div>
+          <h4 className="text-lg font-semibold text-blue-600 mb-2">Recurring Payments</h4>
+          <ul>
+            {recurringTransactions.map((tx) => (
+              <li key={tx.id}>
+                <strong>{tx.category}</strong>: £{tx.amount} - Recurs {tx.recurrenceFrequency} 
+                on {new Date(tx.date).toLocaleDateString("en-US", {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {recurringTransactions.length === 0 && (
+        <p className="insight">No recurring payments this period.</p>
       )}
     </div>
   );

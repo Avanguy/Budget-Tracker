@@ -25,7 +25,7 @@ const FilterControls = ({ filters, setFilters }) => {
         return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
       }
     setFilters({
-      chartType: 'bar',
+      chartType: 'pie',
       transactionType: 'expense',
       startDate: getDefaultMonth(0), // This month
       endDate: getDefaultMonth(1),   // Next month

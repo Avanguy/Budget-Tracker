@@ -58,7 +58,8 @@ const ChartDisplay = ({
             ) : chartType === 'bar' ? (
               <Bar dataKey={dataKeyY}>
                 {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} 
+                  radius={[10, 10, 0, 0]}/>
                 ))}
               </Bar>
             ) : null}

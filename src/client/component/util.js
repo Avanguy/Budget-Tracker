@@ -35,3 +35,40 @@ export const formatNetChartData = (transactions) => {
   
   return accumulateData(grouped);
 };
+// Helper function to group data by category
+export const groupByCategoryCompare = (transactions) => {
+  return transactions.reduce((acc, transaction) => {
+    const { category, amount, type } = transaction;
+    if (!acc[category]) {
+      acc[category] = { income: 0, expense: 0 };
+    }
+    // Separate the income and expense amounts
+    if (type === 'income') {
+      acc[category].income += amount;
+    } else {
+      acc[category].expense += amount;
+    }
+    return acc;
+  }, {});
+};
+
+// Format the grouped data for the chart
+export const formatIncomeVsExpenseData = (transactions) => {
+  const groupedData = groupByCategoryCompare(transactions);
+  return Object.entries(groupedData).map(([category, values]) => ({
+    category,
+    income: values.income,
+    expense: values.expense
+  }));
+};
+export const formatMonthYear = (monthYear) => {
+  // Create a new Date object using the year and month
+  const date = new Date(`${monthYear}-01`); // Adding a default day (01) to make it a valid date
+
+  // Options for the format: "Month Year"
+  const options = { year: 'numeric', month: 'long' };
+
+  // Format the date and return as text (e.g., "April 2025")
+  return date.toLocaleDateString('en-US', options);
+};
+
