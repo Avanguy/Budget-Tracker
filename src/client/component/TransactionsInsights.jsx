@@ -13,7 +13,7 @@ const TransactionsInsights = ({ filteredTransactions, filteredByDate, transactio
   }, null);
 
   // Find any significant individual transactions (uncombined data)
-  const largeTransactions = filteredByDate.filter(tx => tx.amount > 100); // Transactions over £100
+  const largeTransactions = transactionType === "expense"? filteredByDate.filter(tx => tx.amount > 100) : 0 // Transactions over £100
 
   // Helper function to display verbage based on the transaction type (expense or income)
   const getTransactionMessage = () => {
@@ -36,7 +36,7 @@ const TransactionsInsights = ({ filteredTransactions, filteredByDate, transactio
 
   return (
     <div className="insights-container">
-      <h3 className="text-lg font-semibold">Insights</h3>
+      <h3 className="text-lg font-bold text-green-600 mb-2 underline ">Insights</h3>
 
       {/* Total Amount */}
       <p className="insight">
@@ -52,7 +52,7 @@ const TransactionsInsights = ({ filteredTransactions, filteredByDate, transactio
 
       {/* Category Breakdown */}
       <div>
-        <h4>Category Breakdown</h4>
+        <h4 className="text-lg font-semibold text-green-600 mb-2 underline">Category Breakdown</h4>
         <ul>
           {filteredTransactions.map((categoryData) => (
             <li key={categoryData.category}>
@@ -65,7 +65,7 @@ const TransactionsInsights = ({ filteredTransactions, filteredByDate, transactio
       {/* Large Transactions */}
       {largeTransactions.length > 0 && (
         <div>
-          <h4 className="text-lg font-bold text-green-600 mb-2">Large Transactions</h4>
+          <h4 className="text-lg font-semibold text-green-600 mb-2 underline">Large Transactions</h4>
           <ul>
             {largeTransactions.map((tx) => (
               <li key={tx.id}>
