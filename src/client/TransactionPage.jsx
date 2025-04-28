@@ -43,17 +43,34 @@ const TransactionPage = () => {
     },[transactions,user])
 return (
     <>
-        <h2 className='text-center'>Transactions</h2>
-        <div className="flex justify-center items-center">
+        <div className="flex flex-wrap justify-center">
+            <div className="w-[300px] min-h-[300px] max-h-[400px] overflow-auto bg-gray-50 rounded-lg shadow-md p-4">
                 <IncomeOverview selectedMonth={selectedMonth} />
-                <ExpensesOverview selectedMonth={selectedMonth}/>
-                <div className='flex flex-col justify-center '>
-                        <p className='text-center text-3xl underline m-2'>Transaction Menu</p>
-                        <button className='btn-custom' onClick={() => setIsModalOpen(true)}>Add New Transaction</button>
-                        <button className='btn-custom' onClick={() => setActiveComponent("EditTransaction")}>View / Edit Transaction</button>
-                        <button className='btn-custom' onClick={() => setActiveComponent("YearReview")}>Year Review</button>
-                </div>
+            </div>
+
+            <div className="w-[300px] max-h-[400px] overflow-auto bg-gray-50 rounded-lg shadow-md p-4">
+                <ExpensesOverview selectedMonth={selectedMonth} />
+            </div>
+
+            <div className="w-[300px] h-[400px] bg-gray-50 rounded-lg shadow-md p-4 flex flex-col justify-start items-center">
+                <p className="text-center text-2xl font-semibold underline mb-4">Transaction Menu</p>
+                
+                <button className="btn-custom w-full h-[40px] mb-2" onClick={() => setIsModalOpen(true)}>
+                    Add New Transaction
+                </button>
+                
+                <button className="btn-custom w-full h-[40px] mb-2" onClick={() => setActiveComponent('EditTransaction')}>
+                    View / Edit Transaction
+                </button>
+                
+                <button className="btn-custom w-full h-[40px]" onClick={() => setActiveComponent('YearReview')}>
+                    Year Review
+                </button>
+            </div>
+
         </div>
+
+
         {!loading ?( 
             <div className="flex justify-center m-4">
                     {activeComponent === "YearReview" && <YearReview />}
