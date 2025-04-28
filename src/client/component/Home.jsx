@@ -23,21 +23,21 @@ const Home = () => {
       <Section
         title="Easily Visualize and Track Your Spending"
         text="Get a clear picture of your spending habits with simple tracking and helpful charts to guide your budgeting."
-        imgSrc={PieChartImg}
+        imgSrc={BarChartImg}
         imgAlt="Visualization"
         reverse={false} // Image on the left
       />
       <Section
         title="Customizable Categories"
         text="Create your own categories to better track your personal expenses. Tailor your budget tracker to fit your unique lifestyle."
-        imgSrc={BarChartImg}
+        imgSrc={TransactionsImg}
         imgAlt="Categories"
         reverse={true} // Image on the right
       />
       <Section
         title="Detailed Reports"
         text="Generate monthly and yearly reports to see where your money is going and discover ways to save and budget smarter."
-        imgSrc={TransactionsImg}
+        imgSrc={PieChartImg}
         imgAlt="Reports"
         reverse={false} // Image on the left
       />
