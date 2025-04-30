@@ -1,11 +1,12 @@
 
 import express from "express";
 const router = express.Router()
-import {getUser,getUsers,addUser, updateUser,delUser,signUpUser,loginUser,changePassword} from "../controllers/userController.js"
+import {getUser,getUsers,addUser, updateUser,delUser,signUpUser,loginUser,changePassword,demoUser} from "../controllers/userController.js"
 
 router.post('/login',loginUser)
 router.post('/signup',signUpUser)
 router.post('/',addUser)
+router.get('/demo',demoUser)
 /* const requireAuth = require('../middleware/requireAuth') */
 /* router.use(requireAuth) */
 router.post("/changePassword/:id",changePassword)

@@ -2,6 +2,7 @@ import userModel from "../models/userModel.js";
 import mongoose from "mongoose";
 import validator from "validator";
 import bcrypt from "bcrypt";
+import transactionModel from '../models/transactionModel.js'; // or correct path to your Transaction model
 import jwt from "jsonwebtoken";
 
 const createToken = (_id) =>{
@@ -28,6 +29,50 @@ const getUser = async (req,res) =>{
   }
   res.status(200).json(user)
 }
+const demoUser = async (req, res) => {
+  try {
+    const user = await userModel.findOne({ username: 'demo' });
+
+    if (!user) {
+      return res.status(404).json({ error: 'Demo user not found' });
+    }
+      const now = new Date();
+      const lastReset = user.lastResetAt || new Date(0); // default: long ago
+      const hoursSince = (now - lastReset) / (1000 * 60 * 60);
+  
+      if (hoursSince >= 24) {
+        // Reset transactions
+        await transactionModel.deleteMany({ userId: user._id });
+  
+        await transactionModel.insertMany([
+          {
+            userId: user._id,
+            amount: 1200,
+            category: 'Salary',
+            type: 'income',
+            date: new Date(),
+            description: 'Monthly salary',
+          },
+          {
+            userId: user._id,
+            amount: 150,
+            category: 'Groceries',
+            type: 'expense',
+            date: new Date(),
+            description: 'Weekly groceries',
+          },
+        ]);
+  
+        user.lastResetAt = now;
+        await user.save();
+      }
+    res.status(200).json(user);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
 //add users
 const addUser = async (req,res)=>{
     const {username,password} = req.body
@@ -141,6 +186,7 @@ const signUpUser = async (req,res) =>{
     delUser,
     loginUser,
     changePassword,
-    signUpUser
+    signUpUser,
+    demoUser
   };
     

@@ -74,6 +74,22 @@ const Header = () => {
         handleSignupCloseModal()
     }
   };
+  const  handleDemo = async (e) => {
+    e.preventDefault();
+    const demoResponse = await fetch("http://localhost:5174/api/users/demo",{
+        headers:{"Content-Type":"application/json"},
+
+    })
+    const user = await demoResponse.json()
+    if(!demoResponse.ok){
+        console.log(user.error)
+        return
+    }
+    if(demoResponse.ok){
+      console.log(user)
+        navigate("/")
+    }
+  };
   return (
     <header className='flex justify-between items-center p-4 bg-gradient-to-r from-green-900 to-green-900 via-green-800'>
         {user && (
@@ -107,6 +123,13 @@ const Header = () => {
                 onClick={handleSignupClick} // Open modal on click
             >
                 Sign up
+            </button>
+            <button
+                className="btn-custom"
+                onClick={handleDemo} // Open modal on click
+            >
+                Test Demo
+              
             </button>
         </div>
     }

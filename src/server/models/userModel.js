@@ -1,10 +1,13 @@
 import mongoose from "mongoose";
 import validator from "validator";
 import bcrypt from "bcrypt";
+
 const userSchema = new mongoose.Schema({
-  username: { type: String, unique: true, collation: { locale: 'en', strength: 1,required:true } },
-  password: { type: String, required: true },  
+  username: { type: String, unique: true, collation: { locale: 'en', strength: 1 }, required: true },
+  password: { type: String, required: true },
+  lastResetAt: { type: Date, default: null },
 }, { timestamps: true });
+
 
 
 userSchema.statics.signup = async function(username,password){
@@ -53,7 +56,7 @@ userSchema.statics.login = async function(identifier, password) {
   if (!match) {
     throw Error("Invalid login credentials");
   }
-  
+
   return user;
 };
 
