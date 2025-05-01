@@ -1,7 +1,5 @@
 import userModel from "../models/userModel.js";
 import mongoose from "mongoose";
-import validator from "validator";
-import bcrypt from "bcrypt";
 import transactionModel from '../models/transactionModel.js'; // or correct path to your Transaction model
 import jwt from "jsonwebtoken";
 
@@ -66,7 +64,8 @@ const demoUser = async (req, res) => {
         user.lastResetAt = now;
         await user.save();
       }
-    res.status(200).json(user);
+      const token = createToken(user._id)
+    res.status(200).json({user,token});
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Server error' });
@@ -138,46 +137,7 @@ const signUpUser = async (req,res) =>{
     } catch (error) {
         res.status(400).json({error:error.message})
     }
-}
-    const changePassword = async (req, res) => {
-        const { _id, currentPassword, newPassword } = req.body;
-      
-        try {
-          // Find the user by ID
-          let user = await userModel.findOne({ _id });
-      
-          // Check if user exists
-          if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-          }
-      
-          // Validate the current password
-          const isMatch =  bcrypt.compare(currentPassword, user.password);
-          if (!isMatch) {
-            return res.status(400).json({ error: 'Current password is incorrect' });
-          }
-      
-          // Validate the new password
-          if (!validator.isStrongPassword(newPassword)) {
-            return res.status(400).json({ error: 'New password is not strong enough' });
-          }
-      
-          // Hash the new password
-          const salt = await bcrypt.genSalt(10);
-          const hash = await bcrypt.hash(newPassword, salt);
-      
-          // Update the user's password
-          user.password = hash;
-          await user.save();
-      
-          // Send success response
-          res.status(200).json({ message: 'Password changed successfully' });
-        } catch (error) {
-          console.error(error);
-          res.status(500).json({ error: 'An error occurred while changing the password' });
-        }
-      };
-  
+}  
   export {
     getUsers,
     getUser,
@@ -185,7 +145,6 @@ const signUpUser = async (req,res) =>{
     updateUser,
     delUser,
     loginUser,
-    changePassword,
     signUpUser,
     demoUser
   };

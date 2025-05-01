@@ -70,8 +70,9 @@ const Header = () => {
         return
     }
     if(signUpResponse.ok){
-        navigate("/")
-        handleSignupCloseModal()
+      login(user)
+      navigate("/")
+      handleSignupCloseModal()
     }
   };
   const  handleDemo = async (e) => {
@@ -86,8 +87,8 @@ const Header = () => {
         return
     }
     if(demoResponse.ok){
-      console.log(user)
-        navigate("/")
+      login(user)
+      navigate("/")
     }
   };
   return (
