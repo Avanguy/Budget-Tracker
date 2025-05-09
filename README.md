@@ -1,12 +1,31 @@
-# React + Vite
+# 💰 Budget Tracker App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack MERN budget tracking website that allows users to manage their finances with ease. Create an account, track income and expenses, and visualize your financial health with insightful reports.
 
-Currently, two official plugins are available:
+---
+## ✨ Features
+![Home Page](./demo/Dashboard.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 👤 User Accounts  
+Sign up, log in, and manage your personal budget securely.
 
-## Expanding the ESLint configuration
+### ➕ Add / ✏️ Edit / ❌ Delete Transactions  
+Track income and expenses with support for creating, editing, and removing entries.
+![Transaction Page](./demo/Transactions.png)
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 📊 Reporting Dashboard  
+Visual summary of spending and income — filter by category, date range.
+![Reports Page](./demo/Reports.png)
+
+### 🧩 Categorization  
+Assign categories to transactions for better organization and analysis.
+
+---
+
+## 🛠 Tech Stack
+
+- **React**
+- **Node.js + Express**
+- **MongoDB** for data persistence
+- **JWT Authentication**
+- **Tailwind CSS** for styling
